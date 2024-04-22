@@ -17,6 +17,7 @@ func main() {
 	log.Info("staring application")
 
 	application := app.New(log, cfg.Grpc.Port, cfg.StoragePath, 10)
+	// обернуть в приложение бд
 
 	go application.GRPCSrv.MustRun()
 
