@@ -9,6 +9,10 @@ import (
 	"syscall"
 )
 
+const (
+	tokenTTL = 10
+)
+
 func main() {
 	cfg := config.MustLoad()
 
@@ -16,7 +20,7 @@ func main() {
 
 	log.Info("staring application")
 
-	application := app.New(log, cfg.Grpc.Port, cfg.StoragePath, 10)
+	application := app.New(log, cfg.Grpc.Port, cfg.StoragePath, tokenTTL)
 	// обернуть в приложение бд
 
 	go application.GRPCSrv.MustRun()

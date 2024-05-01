@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"cmd/sso/main.go/internal/domain/models"
-	"cmd/sso/main.go/internal/services/storage"
+	"cmd/sso/main.go/internal/storage"
 
 	"github.com/mattn/go-sqlite3"
 )
@@ -19,7 +19,7 @@ type Storage struct {
 func New(storagePath string) (*Storage, error) {
 	const op = "storage.sqlite.New"
 
-	db, err := sql.Open("sqlite", storagePath)
+	db, err := sql.Open("sqlite3", storagePath)
 	if err != nil {
 		return nil, fmt.Errorf("%s:%w", op, err)
 	}

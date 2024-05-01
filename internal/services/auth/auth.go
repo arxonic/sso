@@ -4,7 +4,7 @@ import (
 	"cmd/sso/main.go/internal/domain/models"
 	"cmd/sso/main.go/internal/lib/jwt"
 	"cmd/sso/main.go/internal/lib/logger/sl"
-	"cmd/sso/main.go/internal/services/storage"
+	"cmd/sso/main.go/internal/storage"
 	"context"
 	"errors"
 	"fmt"

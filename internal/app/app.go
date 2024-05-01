@@ -6,7 +6,7 @@ import (
 
 	grpcapp "cmd/sso/main.go/internal/app/grpc"
 	"cmd/sso/main.go/internal/services/auth"
-	"cmd/sso/main.go/internal/services/storage/sqlite"
+	"cmd/sso/main.go/internal/storage/sqlite"
 )
 
 type App struct {

@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"cmd/sso/main.go/internal/services/auth"
-	"cmd/sso/main.go/internal/services/storage"
+	"cmd/sso/main.go/internal/storage"
 
 	ssov1 "github.com/arxonic/protos/gen/go/sso"
 	"google.golang.org/grpc"
