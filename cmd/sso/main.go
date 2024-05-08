@@ -7,10 +7,11 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
-const (
-	tokenTTL = 10
+var (
+	tokenTTL = 1 * time.Hour
 )
 
 func main() {

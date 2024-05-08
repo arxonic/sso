@@ -19,7 +19,7 @@ const (
 
 	passDefaultLen = 10
 
-	tokenTTL = 10
+	tokenTTL = 1 * time.Hour
 )
 
 func TestRegisterLogin_Login_HappyPath(t *testing.T) {
@@ -59,8 +59,8 @@ func TestRegisterLogin_Login_HappyPath(t *testing.T) {
 	require.Equal(t, appID, int(claims["app_id"].(float64)))
 
 	const deltaSeconds = 1
-	assert.InDelta(t, loginTime.Add(tokenTTL).Unix(), claims["exp"].(float64), deltaSeconds)
 
+	assert.InDelta(t, loginTime.Add(tokenTTL).Unix(), claims["exp"].(float64), deltaSeconds)
 }
 
 func randomFakePassword() string {
