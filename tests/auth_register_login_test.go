@@ -2,6 +2,7 @@ package tests
 
 import (
 	"cmd/sso/main.go/tests/suite"
+	"sync"
 	"testing"
 	"time"
 
@@ -65,4 +66,73 @@ func TestRegisterLogin_Login_HappyPath(t *testing.T) {
 
 func randomFakePassword() string {
 	return gofakeit.Password(true, true, true, true, false, passDefaultLen)
+}
+
+func TestRegisterLogin_DuplicatedRegistration(t *testing.T) {
+	ctx, st := suite.New(t)
+
+	email := gofakeit.Email()
+	pass := randomFakePassword()
+
+	// Первая попытка должна быть успешной
+	respReg, err := st.AuthClient.Register(ctx, &ssov1.RegisterRequest{
+		Email:    email,
+		Password: pass,
+	})
+	require.NoError(t, err)
+	require.NotEmpty(t, respReg.GetUserId())
+
+	// Вторая попытка - фэил
+	respReg, err = st.AuthClient.Register(ctx, &ssov1.RegisterRequest{
+		Email:    email,
+		Password: pass,
+	})
+	require.Error(t, err)
+	assert.Empty(t, respReg.GetUserId())
+	assert.ErrorContains(t, err, "user already exists")
+}
+
+func TestRegister_FailCases(t *testing.T) {
+	ctx, st := suite.New(t)
+
+	tests := []struct {
+		name        string
+		email       string
+		password    string
+		expectedErr string
+	}{
+		{
+			name:        "Register with Empty Password",
+			email:       gofakeit.Email(),
+			password:    "",
+			expectedErr: "password is required",
+		},
+		{
+			name:        "Register with Empty Email",
+			email:       "",
+			password:    randomFakePassword(),
+			expectedErr: "email is required",
+		},
+		{
+			name:        "Register with Both Empty",
+			email:       "",
+			password:    "",
+			expectedErr: "email is required",
+		},
+	}
+
+	wg := sync.WaitGroup{}
+	for _, tt := range tests {
+		wg.Add(1)
+		go t.Run(tt.name, func(t *testing.T) {
+			_, err := st.AuthClient.Register(ctx, &ssov1.RegisterRequest{
+				Email:    tt.email,
+				Password: tt.password,
+			})
+			require.Error(t, err)
+			require.Contains(t, err.Error(), tt.expectedErr)
+			wg.Done()
+		})
+	}
+	wg.Wait()
 }
